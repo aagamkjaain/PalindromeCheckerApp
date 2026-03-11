@@ -6,18 +6,28 @@ class PalindromeCheckerApp
     {
         Scanner sc = new Scanner(System.in);
 
-        String str;
-        String rev = "";
-
         System.out.print("Enter a string: ");
-        str = sc.nextLine();
+        String str = sc.nextLine();
 
-        for(int i = str.length() - 1; i >= 0; i--)
+        char[] arr = str.toCharArray();
+
+        int start = 0;
+        int end = arr.length - 1;
+        boolean isPalindrome = true;
+
+        while(start < end)
         {
-            rev = rev + str.charAt(i);
+            if(arr[start] != arr[end])
+            {
+                isPalindrome = false;
+                break;
+            }
+
+            start++;
+            end--;
         }
 
-        if(str.equals(rev))
+        if(isPalindrome)
         {
             System.out.println("Palindrome");
         }
