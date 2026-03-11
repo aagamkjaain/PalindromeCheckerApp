@@ -1,8 +1,29 @@
+import java.util.Scanner;
 
-void main() {
+class PalindromeCheckerApp
+{
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in);
 
-    System.out.println("Welcome To the Palindrome Checker Managment System\nVersion: 1.0\nSystem initialized succesfully ");
-    System.out.println("Input Text : MADAM \nPalindrome check : TRUE");
-    // hi
+        String str;
+        String rev = "";
+
+        System.out.print("Enter a string: ");
+        str = sc.nextLine();
+
+        for(int i = str.length() - 1; i >= 0; i--)
+        {
+            rev = rev + str.charAt(i);
+        }
+
+        if(str.equals(rev))
+        {
+            System.out.println("Palindrome");
+        }
+        else
+        {
+            System.out.println("Not Palindrome");
+        }
+    }
 }
-
