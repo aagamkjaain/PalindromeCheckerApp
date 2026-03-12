@@ -1,44 +1,45 @@
-public class RecursivePalindrome {
+public class PalindromeCheckerApp {
 
     /**
-     * Public method to prepare the string and initiate recursion.
-     * @param str The input string to check.
-     * @return true if the string is a palindrome, false otherwise.
+     * Checks if a string is a palindrome, ignoring case and non-alphanumeric characters.
+     * * @param str The input string to check.
+     * @return true if the normalized string is a palindrome, false otherwise.
      */
     public static boolean isPalindrome(String str) {
-        // Pre-process the string to handle edge cases like spaces and case differences
-        String cleanStr = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        // Step 1: Normalize string using String preprocessing and Regular expressions
+        // The regex "[^a-zA-Z0-9]" matches anything that is NOT a letter or a digit.
+        // We replace those matches with an empty string and convert the result to lowercase.
+        String normalizedStr = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-        // Initiate the recursive call with starting indices
-        return checkPalindromeRecursive(cleanStr, 0, cleanStr.length() - 1);
-    }
+        // Data Structure: Convert the normalized String to a character Array
+        char[] charArray = normalizedStr.toCharArray();
 
-    /**
-     * The core recursive method.
-     */
-    private static boolean checkPalindromeRecursive(String str, int left, int right) {
-        // Base Condition 1: If left index crosses or equals right, we checked all pairs
-        if (left >= right) {
-            return true;
+        // Step 2: Apply previous logic (Two-Pointer Technique)
+        int left = 0;
+        int right = charArray.length - 1;
+
+        while (left < right) {
+            // Compare characters at the front and rear pointers
+            if (charArray[left] != charArray[right]) {
+                return false; // Mismatch found, not a palindrome
+            }
+            left++;
+            right--;
         }
 
-        // Base Condition 2: If characters at current pointers don't match, it's not a palindrome
-        if (str.charAt(left) != str.charAt(right)) {
-            return false;
-        }
-
-        // Recursive call: Move pointers inward and call the method again
-        return checkPalindromeRecursive(str, left + 1, right - 1);
+        return true; // Loop finished without mismatches; it's a palindrome
     }
 
     public static void main(String[] args) {
         // Test Cases
-        String test1 = "racecar";
-        String test2 = "hello";
-        String test3 = "A man, a plan, a canal: Panama";
+        String test1 = "A man, a plan, a canal: Panama";
+        String test2 = "No 'x' in Nixon";
+        String test3 = "Was it a car or a cat I saw?";
+        String test4 = "Hello World";
 
         System.out.println("Is '" + test1 + "' a palindrome? " + isPalindrome(test1));
         System.out.println("Is '" + test2 + "' a palindrome? " + isPalindrome(test2));
         System.out.println("Is '" + test3 + "' a palindrome? " + isPalindrome(test3));
+        System.out.println("Is '" + test4 + "' a palindrome? " + isPalindrome(test4));
     }
 }
