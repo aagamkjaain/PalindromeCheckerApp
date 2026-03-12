@@ -1,97 +1,44 @@
-public class PalindromeCheckerApp {
-
-    // Singly Linked List Node definition
-    static class ListNode {
-        char val;
-        ListNode next;
-
-        ListNode(char val) {
-            this.val = val;
-            this.next = null;
-        }
-    }
+public class RecursivePalindrome {
 
     /**
-     * Helper method: Step 1 - Convert string to linked list
+     * Public method to prepare the string and initiate recursion.
+     * @param str The input string to check.
+     * @return true if the string is a palindrome, false otherwise.
      */
-    public static ListNode stringToList(String str) {
+    public static boolean isPalindrome(String str) {
+        // Pre-process the string to handle edge cases like spaces and case differences
         String cleanStr = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-        if (cleanStr.isEmpty()) return null;
 
-        ListNode head = new ListNode(cleanStr.charAt(0));
-        ListNode current = head;
-
-        // Node Traversal: Sequential access to build the list
-        for (int i = 1; i < cleanStr.length(); i++) {
-            current.next = new ListNode(cleanStr.charAt(i));
-            current = current.next;
-        }
-        return head;
+        // Initiate the recursive call with starting indices
+        return checkPalindromeRecursive(cleanStr, 0, cleanStr.length() - 1);
     }
 
     /**
-     * Core logic to check if the linked list is a palindrome
+     * The core recursive method.
      */
-    public static boolean isPalindrome(ListNode head) {
-        if (head == null || head.next == null) {
+    private static boolean checkPalindromeRecursive(String str, int left, int right) {
+        // Base Condition 1: If left index crosses or equals right, we checked all pairs
+        if (left >= right) {
             return true;
         }
 
-        // Fast and Slow Pointer Technique to find the middle
-        ListNode slow = head;
-        ListNode fast = head;
-
-        while (fast != null && fast.next != null) {
-            slow = slow.next;         // Moves 1 step
-            fast = fast.next.next;    // Moves 2 steps
+        // Base Condition 2: If characters at current pointers don't match, it's not a palindrome
+        if (str.charAt(left) != str.charAt(right)) {
+            return false;
         }
 
-        // Step 2: In-Place Reversal of the second half
-        ListNode secondHalfHead = reverseList(slow);
-
-        // Step 3: Compare halves
-        ListNode p1 = head;
-        ListNode p2 = secondHalfHead;
-        boolean isPalin = true;
-
-        while (p2 != null) {
-            if (p1.val != p2.val) {
-                isPalin = false;
-                break; // Mismatch found
-            }
-            p1 = p1.next;
-            p2 = p2.next;
-        }
-
-        // Optional best practice: Restore the list back to its original state here
-        // reverseList(secondHalfHead);
-
-        return isPalin;
-    }
-
-    /**
-     * Helper method to reverse a linked list in-place
-     */
-    private static ListNode reverseList(ListNode head) {
-        ListNode prev = null;
-        ListNode curr = head;
-
-        while (curr != null) {
-            ListNode nextTemp = curr.next;
-            curr.next = prev;
-            prev = curr;
-            curr = nextTemp;
-        }
-        return prev;
+        // Recursive call: Move pointers inward and call the method again
+        return checkPalindromeRecursive(str, left + 1, right - 1);
     }
 
     public static void main(String[] args) {
         // Test Cases
-        String[] testStrings = {"racecar", "hello", "A man, a plan, a canal: Panama"};
+        String test1 = "racecar";
+        String test2 = "hello";
+        String test3 = "A man, a plan, a canal: Panama";
 
-        for (String test : testStrings) {
-            ListNode head = stringToList(test);
-            System.out.println("Is '" + test + "' a palindrome? " + isPalindrome(head));
-        }
+        System.out.println("Is '" + test1 + "' a palindrome? " + isPalindrome(test1));
+        System.out.println("Is '" + test2 + "' a palindrome? " + isPalindrome(test2));
+        System.out.println("Is '" + test3 + "' a palindrome? " + isPalindrome(test3));
     }
 }
