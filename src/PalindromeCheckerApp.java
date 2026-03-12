@@ -1,38 +1,50 @@
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
-class UseCase5PalindromeCheckerApp
-{
-    public static void main(String[] args)
-    {
-        Scanner sc = new Scanner(System.in);
+public class PalindromeCheckerApp {
 
-        System.out.print("Enter a string: ");
-        String str = sc.nextLine();
+    /**
+     * Checks if a given string is a palindrome using a Deque.
+     * * @param str The input string to check.
+     * @return true if the string is a palindrome, false otherwise.
+     */
+    public static boolean isPalindrome(String str) {
+        // Step 1: Pre-process the string (optional but recommended)
+        // Convert to lowercase and remove non-alphanumeric characters for accurate checking
+        String cleanStr = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-        Stack<Character> stack = new Stack<>();
+        // Initialize the Deque (ArrayDeque is highly optimized for this)
+        Deque<Character> deque = new ArrayDeque<>();
 
-        // Push characters into stack
-        for(int i = 0; i < str.length(); i++)
-        {
-            stack.push(str.charAt(i));
+        // Step 2: Insert characters into deque
+        for (char c : cleanStr.toCharArray()) {
+            deque.addLast(c);
         }
 
-        String reversed = "";
+        // Step 3: Remove first & last, Compare until empty (or 1 element left)
+        while (deque.size() > 1) {
+            // Front and Rear Access
+            char front = deque.removeFirst();
+            char rear = deque.removeLast();
 
-        // Pop characters from stack
-        while(!stack.isEmpty())
-        {
-            reversed = reversed + stack.pop();
+            // Compare elements
+            if (front != rear) {
+                return false; // Mismatch found, not a palindrome
+            }
         }
 
-        if(str.equals(reversed))
-        {
-            System.out.println("Palindrome");
-        }
-        else
-        {
-            System.out.println("Not Palindrome");
-        }
+        // Optimized Data Handling: If the loop finishes without mismatches, it's a palindrome
+        return true;
+    }
+
+    public static void main(String[] args) {
+        // Test Cases
+        String test1 = "racecar";
+        String test2 = "hello";
+        String test3 = "A man, a plan, a canal: Panama"; // Testing with spaces and punctuation
+
+        System.out.println("Is '" + test1 + "' a palindrome? " + isPalindrome(test1));
+        System.out.println("Is '" + test2 + "' a palindrome? " + isPalindrome(test2));
+        System.out.println("Is '" + test3 + "' a palindrome? " + isPalindrome(test3));
     }
 }
