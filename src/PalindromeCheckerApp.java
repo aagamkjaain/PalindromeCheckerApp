@@ -1,45 +1,78 @@
+import java.util.Stack;
+
 public class PalindromeCheckerApp {
 
-    /**
-     * Checks if a string is a palindrome, ignoring case and non-alphanumeric characters.
-     * * @param str The input string to check.
-     * @return true if the normalized string is a palindrome, false otherwise.
-     */
-    public static boolean isPalindrome(String str) {
-        // Step 1: Normalize string using String preprocessing and Regular expressions
-        // The regex "[^a-zA-Z0-9]" matches anything that is NOT a letter or a digit.
-        // We replace those matches with an empty string and convert the result to lowercase.
-        String normalizedStr = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-
-        // Data Structure: Convert the normalized String to a character Array
-        char[] charArray = normalizedStr.toCharArray();
-
-        // Step 2: Apply previous logic (Two-Pointer Technique)
+    // --- Algorithm 1: Optimized Two-Pointer (O(1) Space) ---
+    public static boolean isPalindromeTwoPointer(String text) {
         int left = 0;
-        int right = charArray.length - 1;
-
+        int right = text.length() - 1;
         while (left < right) {
-            // Compare characters at the front and rear pointers
-            if (charArray[left] != charArray[right]) {
-                return false; // Mismatch found, not a palindrome
+            if (text.charAt(left) != text.charAt(right)) {
+                return false;
             }
             left++;
             right--;
         }
+        return true;
+    }
 
-        return true; // Loop finished without mismatches; it's a palindrome
+    // --- Algorithm 2: StringBuilder Reversal (O(n) Space) ---
+    public static boolean isPalindromeStringBuilder(String text) {
+        String reversed = new StringBuilder(text).reverse().toString();
+        return text.equals(reversed);
+    }
+
+    // --- Algorithm 3: Stack-Based (O(n) Space, Higher Overhead) ---
+    public static boolean isPalindromeStack(String text) {
+        Stack<Character> stack = new Stack<>();
+        for (char c : text.toCharArray()) {
+            stack.push(c);
+        }
+        for (char c : text.toCharArray()) {
+            if (stack.pop() != c) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static void main(String[] args) {
-        // Test Cases
-        String test1 = "A man, a plan, a canal: Panama";
-        String test2 = "No 'x' in Nixon";
-        String test3 = "Was it a car or a cat I saw?";
-        String test4 = "Hello World";
+        // Create a massive palindrome string to clearly see performance differences
+        StringBuilder sb = new StringBuilder();
+        sb.append("a".repeat(500000));
+        sb.append("b");
+        sb.append("a".repeat(500000));
+        String massiveString = sb.toString();
 
-        System.out.println("Is '" + test1 + "' a palindrome? " + isPalindrome(test1));
-        System.out.println("Is '" + test2 + "' a palindrome? " + isPalindrome(test2));
-        System.out.println("Is '" + test3 + "' a palindrome? " + isPalindrome(test3));
-        System.out.println("Is '" + test4 + "' a palindrome? " + isPalindrome(test4));
+        System.out.println("Running Performance Comparison on String length: " + massiveString.length() + "\n");
+
+        // JVM Warm-up (Important for accurate micro-benchmarking in Java)
+        isPalindromeTwoPointer(massiveString);
+        isPalindromeStringBuilder(massiveString);
+        isPalindromeStack(massiveString);
+
+        // 1. Measure Two-Pointer
+        long startTime = System.nanoTime();
+        isPalindromeTwoPointer(massiveString);
+        long endTime = System.nanoTime();
+        long durationTwoPointer = (endTime - startTime) / 1_000_000; // Convert to milliseconds
+
+        // 2. Measure StringBuilder
+        startTime = System.nanoTime();
+        isPalindromeStringBuilder(massiveString);
+        endTime = System.nanoTime();
+        long durationStringBuilder = (endTime - startTime) / 1_000_000;
+
+        // 3. Measure Stack
+        startTime = System.nanoTime();
+        isPalindromeStack(massiveString);
+        endTime = System.nanoTime();
+        long durationStack = (endTime - startTime) / 1_000_000;
+
+        // Display Results
+        System.out.println("--- Execution Results (Milliseconds) ---");
+        System.out.println("1. Two-Pointer Approach   : " + durationTwoPointer + " ms");
+        System.out.println("2. StringBuilder Approach : " + durationStringBuilder + " ms");
+        System.out.println("3. Stack Approach         : " + durationStack + " ms");
     }
 }
